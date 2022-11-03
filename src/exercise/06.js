@@ -3,6 +3,7 @@
 
 import React, {useState, useEffect} from 'react'
 import {PokemonForm, fetchPokemon, PokemonInfoFallback, PokemonDataView} from '../pokemon'
+import {ErrorBoundary as ErrorBoundaryExternal} from "react-error-boundary";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -40,6 +41,16 @@ const statuses = {
   pending: 'pending',
   resolved: 'resolved',
   rejected: 'rejected',
+}
+
+function ErrorFallback({error}) {
+  return (
+    <div className="pokemon-info">
+      <h3>There was an error:</h3>
+      <p>Unsupported pokemon: "{error.message}".</p>
+      <p>Try "pikachu"</p>
+    </div>
+  )
 }
 
 function PokemonInfo({pokemonName}) {
@@ -93,20 +104,25 @@ function PokemonInfo({pokemonName}) {
 
 function App() {
   const [pokemonName, setPokemonName] = React.useState('')
+  const [errorHandle, setErrorHandle] = React.useState(false)
 
   function handleSubmit(newPokemonName) {
     setPokemonName(newPokemonName)
+    setErrorHandle(!errorHandle)
   }
 
   return (
     <div className="pokemon-info-app">
-        <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
-        <hr />
-        <ErrorBoundary key={pokemonName}>
-          <div className="pokemon-info">
-            <PokemonInfo pokemonName={pokemonName} />
-          </div>
-        </ErrorBoundary>
+      <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
+      <hr />
+      <ErrorBoundaryExternal
+        FallbackComponent={ErrorFallback}
+        resetKeys={[errorHandle]}
+      >
+        <div className="pokemon-info">
+          <PokemonInfo pokemonName={pokemonName} />
+        </div>
+      </ErrorBoundaryExternal>
     </div>
   )
 }
