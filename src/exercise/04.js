@@ -92,7 +92,7 @@ function Game() {
     const buttonText = step === 0 ? "Go to game start" : `Go to move #${step}`
 
     return (
-      <li>
+      <li key={step}>
         <button onClick={() => {calculateCurrentSquares(step, history)}} disabled={currentStep === step}>
           {buttonText} {currentStep === step && "(current)"}
         </button>
