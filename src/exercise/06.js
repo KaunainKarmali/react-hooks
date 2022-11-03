@@ -43,12 +43,15 @@ const statuses = {
   rejected: 'rejected',
 }
 
-function ErrorFallback({error}) {
+function ErrorFallback({error, resetErrorBoundary}) {
   return (
     <div className="pokemon-info">
       <h3>There was an error:</h3>
       <p>Unsupported pokemon: "{error.message}".</p>
       <p>Try "pikachu"</p>
+      <button onClick={resetErrorBoundary} type="submit">
+          Try again
+      </button>
     </div>
   )
 }
@@ -104,11 +107,9 @@ function PokemonInfo({pokemonName}) {
 
 function App() {
   const [pokemonName, setPokemonName] = React.useState('')
-  const [errorHandle, setErrorHandle] = React.useState(false)
 
   function handleSubmit(newPokemonName) {
     setPokemonName(newPokemonName)
-    setErrorHandle(!errorHandle)
   }
 
   return (
@@ -117,7 +118,7 @@ function App() {
       <hr />
       <ErrorBoundaryExternal
         FallbackComponent={ErrorFallback}
-        resetKeys={[errorHandle]}
+        onReset={() => setPokemonName('')}
       >
         <div className="pokemon-info">
           <PokemonInfo pokemonName={pokemonName} />
