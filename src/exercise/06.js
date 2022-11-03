@@ -43,15 +43,12 @@ const statuses = {
   rejected: 'rejected',
 }
 
-function ErrorFallback({error, resetErrorBoundary}) {
+function ErrorFallback({error}) {
   return (
     <div className="pokemon-info">
       <h3>There was an error:</h3>
       <p>Unsupported pokemon: "{error.message}".</p>
       <p>Try "pikachu"</p>
-      <button onClick={resetErrorBoundary} type="submit">
-          Try again
-      </button>
     </div>
   )
 }
@@ -118,7 +115,7 @@ function App() {
       <hr />
       <ErrorBoundaryExternal
         FallbackComponent={ErrorFallback}
-        onReset={() => setPokemonName('')}
+        resetKeys={[pokemonName]}
       >
         <div className="pokemon-info">
           <PokemonInfo pokemonName={pokemonName} />
